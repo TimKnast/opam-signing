@@ -1,0 +1,30 @@
+Guide to packaging: https://opam.ocaml.org/doc/Packaging.html
+- provides some info about pkg format
+
+Opam ships with one default repository, "https://opam.ocaml.org/", which exposes the following resources:
+
+- /repo (file; related to git?)
+    Link to repository git/current and a "browse:" link (?)
+
+- /urls.txt (file; pulled for every update)
+    Contains checksums of all files in /archives/, /compilers/, /packages/ and /repo (file) inside index.tar.gz
+
+- /index.tar.gz (file; gzip-compressed)
+    Contains /compilers/, /packages/, /version
+
+- /archives/ (directory; stores packages)
+  - /(*name of pkg*)/
+    - /(*pkgname*).(*version*)/
+         (* why 3 files for metadata? *)
+      - opam (file; special format)
+          Contains metadata and build instructions and version info
+      - url (file
+          Contains link to .tar.gz or git/darchs of target project
+      - descr (file; short text about pkg)
+      - files/ (dir; patches by maintainer)
+
+Opam mirrors the repository in ~/.opam/repo/default/ where index.tar.gz is unpacked and installed packages are cached in archives/ (as well as in ~/.opam/archives/. The archives aren't hardlinked, so each file in the cache is stored at leasttwice.
+
+tar --listed-incremental/--incremental?
+
+
