@@ -1,0 +1,6 @@
+- sign index.tar.gz using master key
+  - lose urls.txt ? pointless ?
+- each maintainer signs index.tar.gz/packages/manifest containing sha256 sums of all files in packages/<pkgname>/<pkgname>.*/
+- maintainer public keys are stored in index.tar.gz/packages/<pkgname/maintainer.pub
+- revoked certificates are replaced in affected maintainer.pub
+
