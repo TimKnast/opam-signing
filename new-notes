@@ -1,0 +1,14 @@
+- A repository has the following signing keys:
+  - Revocation key, for signing CRLs
+    - Compromise enables attackers to revoke existing maintainer keys
+  - Introduction (induction sp?) key, for signing maintainer keys
+    - Compromise enables attackers to add new maintainer keys
+  - Index (name?) key, for signing repository indexes.
+    - Compromise enables attackers to decouple CRLs and package indexes, selectively hiding updates, changing which maintainers are associated with which projects (can't introduce new maintainers however)
+
+- A maintainer has a "maintainer key" for authenticating package data
+
+- `opam publish` should automatically offer to generate keys for maintainers who do not have keys, should include key-signing-request (for repo to  onsider) along with pkg data
+  - keys with pending signing-requests are added to a list of unsiigned keys. users can choose to blindly trust keys on this list if functionality > security or if they have manually verified the key.
+
+
