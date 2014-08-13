@@ -1,6 +1,6 @@
 tool: tool.ml
 	ocamlfind ocamlopt \
--o tool \
+-o tool.native \
 -linkpkg -package \
-nocrypto \
+cstruct.unix,cstruct,nocrypto \
 tool.ml
