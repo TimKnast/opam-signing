@@ -63,6 +63,7 @@ let print_hash file=
 let () =
 (* Sys.set_signal Sys.sigusr1 print_progress *)
 
+(* map_dir should return an option of errors with Some having a description of what went wrong *)
   if map_dir print_hash argv.(1) then
     print_endline "success"
   else
