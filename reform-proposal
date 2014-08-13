@@ -1,6 +1,8 @@
-- sign index.tar.gz using master key
-  - lose urls.txt ? pointless ?
-- each maintainer signs index.tar.gz/packages/manifest containing sha256 sums of all files in packages/<pkgname>/<pkgname>.*/
-- maintainer public keys are stored in index.tar.gz/packages/<pkgname/maintainer.pub
-- revoked certificates are replaced in affected maintainer.pub
-
+- focus should be on the git pull-based protocol since primitives developed for that can be used in an optimized delta update protocol later on
+- hash individual files in pkgs instead of concatenating * and checksumming. this allows using mmaps with Nocrypto.Hash.SHA256 so we can let the OS handle vm resources (and allows us to say which file failed the checksum)
+ 
+- each maintainer signs packages/<pkgname>/<pkgname>.<version>.manifest containing sha256 sums of all files in packages/<pkgname>/<pkgname>.<version>/ recursively, with matching path names (starting with <pkgname>.<version> ? (alternatively include pkgname + version in manifest file somewhere else)
+- maintainer public keys are stored in maintainers.pem file signed with repo maintainer key
+- need a way to identify maintainers associated with pkg(version?) - pem serial, cn/email, hash?
+  - should maintainers be allowed to add new pkgs to repo or should the maintainer<->pkg link be established by an offline key sig? (safer, more cumbersome - should probably)
+- revoked certificates are placed in a CRL PEM signed with repo revocation key
