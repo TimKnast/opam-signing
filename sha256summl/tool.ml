@@ -1,8 +1,29 @@
 open Buffer
 open Sys
 open Filename
+(* open Unix TODO for proper openat *)
 open Unix_cstruct
 open Nocrypto.Hash
+
+type signature_t = Valid | Invalid
+type filepath_t = string
+type checksum_t = string
+type checksum_record_t = { filepath: filepath_t; checksum: checksum_t }
+type checksum_file_t = int * checksum_record_t list
+
+(*
+let entries_of_dir_handle dir_handle =
+  let entries = ref [] in
+  let () = try
+    while true do
+      entries := readdir dir_handle :: !entries
+    done
+  with
+     (* TODO getting "unbound constructor" error  with End_of_directory *)
+    Unix_error (_ , _, _) ->  ()
+    | _ -> ()
+  in List.fast_sort compare !entries
+*)
 
 let rec map_dir f path =
   (* this does a lot of string concatenation
@@ -14,12 +35,13 @@ let rec map_dir f path =
         String.sub path 0 pathlen
         else path in
     let _ = try 
-    let dirarr = readdir path in
+(*    let dirarr = entries_of_dir_handle dir in TODO for use with Unix.openat *)
+      let dirarr = readdir path in
       Array.fast_sort compare dirarr;
       for i = 0 to Array.length dirarr -1 do
         if !success then
         (* TODO only add / if needed*)
-        let dirent = path^"/"^ dirarr.(i) in
+        let dirent = (dirname path^"/"^basename path)^"/"^ dirarr.(i) in
         success := map_dir f dirent 
       done 
     with
