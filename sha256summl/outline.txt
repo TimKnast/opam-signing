@@ -1,0 +1,41 @@
+Components:
+- FilesystemRecurse: Module for traversing a filesystem from a specified starting point
+- ChecksumRecurse: A module utilizing FilesystemRecurse to generate/verify file checksums
+- ochecksum: A commandline tool to generate/verify ochecksum "manifests" (file+checksum lists)
+- osignify: A commandline tool to generate/verify x509 signatures on ochecksum manifests
+
+== FilesystemRecurse
+- Parameters:
+  * ?dir_callback: optional, called on each directory
+  * ?file_callback: optional, called on each directory entry
+  * ~sort:bool: whether or not to sort directory entries before calling ?dir_callback and ?file_callback
+  * ?ignore:(string list): optional, a list of entries to ignore ("." and ".." are automatically prepended)
+  * ~path:string, mandatory, the starting point in the filesystem (todo should handle dir_handle too)
+- The callbacks return options/errors where Nothing signals FilesystemRecurse to continue and Something of 'a instructs the module to halt and return said Something. Useful for `find`-like tolls; in ChecksumRecurse it's used to halt on checksum mismatch or filesystem errors (permissions, i/o errors, ...)
+- One public function:
+  - recurse
+
+== ChecksumRecurse
+- Parameters
+  * ~file_callback, mandatory, supplies checksum_record_t instead of filename string
+  * ~checksum_callback, mandatory, supplies channel_in and expects checksum_t as return value (hashes files)
+  * ~path:string, mandatory, punned to FilesystemRecurse 
+  * ~sorted:bool, mandatory, punned to FilesystemRecurse
+- use mmap to let OS handle virtual memory constraints
+- One public function: 
+  - checksum
+
+== ochecksum
+- Uses ?file_callback with a function curried with a mutable data type when generating checksum lists, could be channel_out or (checksum_record_t array)
+  - Because entries are sorted we can reject manifest if any mismatch is encountered
+  - Uses bytes/Buffer compare to check validity
+  - use callback to pop checksum_record_t off manifest when verifying (mutable/ref too)
+- Two modes: generate_manifest, verify_manifest
+
+== osignify
+- verifies manifest before invoking ochecksum
+- probably best to integrate hashing+signing? (benefits of separate? - offline sigs w/o copying files to airgap - cons? - async gen/signing, forgetting signing, ..?) TODO
+- manifest header is a limited-size record containing pkg name, pkg version, manifest byte length (including header? thats easier?), manifest checksum (of file beyond header)
+ - "limited-size" is just to ensure mitm doesnt blow up computer before we realize something's going on, sane limit depends mainly on checksums used and signature scheme
+- anything handling keys should mlockall to prevents swap of sensitive data
+
