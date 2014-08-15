@@ -8,8 +8,12 @@ open Nocrypto.Hash
 type signature_t = Valid | Invalid
 type filepath_t = string
 type checksum_t = string
-type checksum_record_t = { filepath: filepath_t; checksum: checksum_t }
-type checksum_file_t = int * checksum_record_t list
+type checksum_record_t = {
+  filepath: filepath_t;
+  filelength: int; (*uint64*)
+  checksum: checksum_t
+ }
+type checksum_file_t = checksum_record_t list
 
 (*
 let entries_of_dir_handle dir_handle =
