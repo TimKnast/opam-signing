@@ -1,7 +1,6 @@
 open Buffer
 open Sys
 open Filename
-open Unix_cstruct
 
 let string_ends_with s1 s2 =
   let substring = String.sub s1

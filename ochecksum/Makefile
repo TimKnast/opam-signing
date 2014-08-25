@@ -1,7 +1,13 @@
-checksumrecurse: fsrecurse ChecksumRecurse.ml
-	ocamlfind ocamlopt -c \
+ochecksum: fsrecurse checksumrecurse ochecksum.ml
+	ocamlfind ocamlopt -o \
+ochecksum.native \
 -linkpkg -package \
-nocrypto \
+nocrypto,cstruct,cstruct.unix \
+FsRecurse.mli FsRecurse.ml ChecksumRecurse.mli ChecksumRecurse.ml \
+ochecksum.ml
+
+checksumrecurse: fsrecurse ChecksumRecurse.ml ChecksumRecurse.mli
+	ocamlfind ocamlopt -c \
 FsRecurse.ml FsRecurse.mli ChecksumRecurse.mli ChecksumRecurse.ml 
 
 fsrecurse: FsRecurse.mli FsRecurse.ml

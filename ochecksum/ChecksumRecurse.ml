@@ -41,19 +41,7 @@ let print_hash ~checksum_callback ~(path:string) : string option =
     print_endline acc ;
     None
 
-let strip_sha256_whitespace hash =
-  let hlen = Buffer.length hash in
-  let ret = String.create (hlen / 3 * 2) in
-  let ()=
-    for i = 0 to hlen / 3 - 2 do
-       let offset = i*3 + 
-         if i > 15 then 2 else 1
-       in
-       blit hash offset ret (i*2) 2
-    done
-  in ret
-
-let checksumrecurse ~file_callback ~checksum_callback
-  ~(sort:bool) ~(path:string) : string option =
+let checksumrecurse ~checksum_callback
+  ~(sort:bool) ~(path:string) (): string option =
   fsrecurse ~file_callback:(print_hash ~checksum_callback) ~path ~sort ()
 
