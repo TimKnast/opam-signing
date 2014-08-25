@@ -1,4 +1,4 @@
-checksumrecurse: ChecksumRecurse.ml
+checksumrecurse: fsrecurse ChecksumRecurse.ml
 	ocamlfind ocamlopt -o \
 ChecksumRecurse.cmo \
 -linkpkg -package \
