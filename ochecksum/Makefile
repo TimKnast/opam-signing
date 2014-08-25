@@ -1,9 +1,8 @@
 checksumrecurse: fsrecurse ChecksumRecurse.ml
-	ocamlfind ocamlopt -o \
-ChecksumRecurse.cmo \
+	ocamlfind ocamlopt -c \
 -linkpkg -package \
 nocrypto \
-FsRecurse.ml FsRecurse.mli ChecksumRecurse.ml
+FsRecurse.ml FsRecurse.mli ChecksumRecurse.mli ChecksumRecurse.ml 
 
 fsrecurse: FsRecurse.mli FsRecurse.ml
 	ocamlfind ocamlopt -c \
