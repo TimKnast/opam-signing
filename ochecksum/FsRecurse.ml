@@ -19,22 +19,22 @@ let strip_from_end s e =
   done
   in !ret
 
-let default_file_callback ~path:string : string option =
+let default_file_callback ~(path:string) : string option =
   None
 
-let default_dir_callback ~path:string : string option =
+let default_dir_callback ~(path:string) : string option =
   None
 
 let rec map_dir
   ~file_callback
   ~dir_callback
   ~ignore
-  ~path:string
-  ~sort:bool : string option =
+  ~(path:string)
+  ~(sort:bool) : string option =
   let rec _map_dir 
 ~file_callback ~dir_callback ~ignore ~path ~sort
  : string option=
-    let success = ref (dir_callback path) in
+    let success = ref (dir_callback ~path) in
     let _ = try 
       let dirarr = readdir path in
       if sort then begin
@@ -55,17 +55,17 @@ let rec map_dir
     match path with
      | _ when is_directory path
        -> _map_dir ~file_callback ~dir_callback ~ignore ~path ~sort
-     | _ -> file_callback path
+     | _ -> file_callback ~path
   end else
-    Some "No such file: " ^ path
+    Some ("No such file: " ^ path)
 
 
 let fsrecurse
   ?(file_callback=default_file_callback)
   ?(dir_callback=default_dir_callback)
   ?(ignore=[])
-  ~path:string
-  ~sort:bool
+  ~(path:string)
+  ~(sort:bool)
   : string option
   =
   let path = (strip_from_end path dir_sep) ^ dir_sep in

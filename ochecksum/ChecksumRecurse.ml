@@ -1,4 +1,6 @@
-open FilesystemRecurse
+open FsRecurse
+open Buffer
+open Int64
 
 type signature_t = Valid | Invalid
 type filepath_t = string
@@ -10,26 +12,24 @@ type checksum_record_t = {
  }
 type checksum_file_t = checksum_record_t list
 
-let path_and_hash (file:string)
-  (checksum_callback: string -> checksum_t)
+let path_and_hash ~(path:string)
+  ~(checksum_callback: path:string -> checksum_t)
   =
   let ret = 
-  { filepath = file;
-    checksum = checksum_callback file }
+  { filepath = path;
+    filelength = Int64.of_int 123; (*todo get len *)
+    checksum = checksum_callback ~path }
   in ret
 
-let print_hash ~checksum_callback file =
+let print_hash ~checksum_callback ~(path:string) : string option =
   let () =
-  let checksum = path_and_hash file checksum_callback in
+  let checksum = path_and_hash ~path ~checksum_callback in
   let acc = String.concat " " [
     checksum.filepath;
     checksum.checksum
     ] in
     print_endline acc 
-  in Nothing
-
-
-
+  in None
 
 let strip_sha256_whitespace hash =
   let hlen = Buffer.length hash in
@@ -43,7 +43,7 @@ let strip_sha256_whitespace hash =
     done
   in ret
 
-let recurse ~file_callback ~checksum_callback
-  (~sort:bool) ~path : option =
-  FilesystemRecurse ~path ~sort ~file_callback:(print_and_hash ~checksum_callback)
+let checksumrecurse ~file_callback ~checksum_callback
+  ~(sort:bool) ~(path:string) : string option =
+  fsrecurse ~file_callback:(print_hash ~checksum_callback) ~path ~sort
 

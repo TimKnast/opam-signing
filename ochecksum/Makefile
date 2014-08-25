@@ -1,10 +1,15 @@
-fsrecurse:
-	ocamlfind ocamlopt \
--o FsRecurse.cmo \
+checksumrecurse: fsrecurse ChecksumRecurse.ml
+	ocamlfind ocamlopt -o \
+ChecksumRecurse.cmo \
 -linkpkg -package \
+nocrypto \
+FsRecurse.ml FsRecurse.mli ChecksumRecurse.ml
+
+fsrecurse: FsRecurse.mli FsRecurse.ml
+	ocamlfind ocamlopt -linkpkg -package \
 cstruct.unix,cstruct \
-FsRecurse.ml
+FsRecurse.mli
 
 clean:
-	rm *.cmi *.cmx *.cmo *.native *.o 2>/dev/null | true
+	rm *.cmxa *.cmi *.cmx *.cmo *.native *.o 2>/dev/null | true
 
