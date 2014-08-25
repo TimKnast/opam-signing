@@ -4,6 +4,7 @@ val fsrecurse :
 -> ?ignore:string list
 -> path:string
 -> sort:bool
+-> unit (* #wtfocaml *)
 (* returns: *)
 -> string option
 

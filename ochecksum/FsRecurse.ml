@@ -66,6 +66,7 @@ let fsrecurse
   ?(ignore=[])
   ~(path:string)
   ~(sort:bool)
+  ()
   : string option
   =
   let path = (strip_from_end path dir_sep) ^ dir_sep in
