@@ -69,7 +69,8 @@ let fsrecurse
   : string option
   =
   let path = (strip_from_end path dir_sep) in
+  if String.length path <> 0 then
   map_dir ~path ~sort
     ~ignore:("."::".."::ignore)
     ~dir_callback ~file_callback
-
+  else Some "PATH passed to FsRecurse is invalid." (* todo diff between cases above*)

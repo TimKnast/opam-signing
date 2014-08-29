@@ -1,0 +1,40 @@
+notes / ideas pertaining to the ochecksum cmdliner options ("Terms")
+
+--ignore	list of globs to ignore. glob against PATH if contains /, otherwise basename(PATH)
+  Term.Arg.(value & opt (string list) []) ... kinda.
+  Useful for ignoring .git etc
+        type ignorelist_t = IgnoreList of (string list) | IgnoreArray of (string array)
+  - define submodule that defines a filepath_t which checks that 0x1F < c < 0x7F, strlen < maxos size
+
+--repo	string, mandatory. repo name
+
+-h alias for help
+
+--sign/--verify	specify operational mode.
+
+--pkg	Forces a prefix, example:
+        --sign --pkg "abc-1.23" ./tls-checkout
+          results in the first dir element being named "abc-1.23" instead of "./tls-checkout
+
+--config-dir / --private-key-dir, etc...
+	dir to read files from
+
+--ignore-git, add ".git"
+
+--diskless use --*-fd settings to get rid of disk access, not exposing the filesystem to untrusted data
+
+--identity required if more thsn one maintainer key is found
+
+
+~/.ochecksum/[pkg]-[version]-[repo]-[mode]	optional vals, used to store config files
+"all" is wildcard, attempt to guess repo namd from PATH or supplied with --repo
+Files are read in lexical order (String.sort) except for the version part which is sorted numerically (so 20.1 > 3).
+Later duplicates override previous setting, should provide an option to force "once only" for correctness.
+
+
+--init-config	copies config template to pkg-specific dir
+--append-config saves cmdline config opts to a file
+--init-symlink/--init-hardcopy -> whether or not to symlink instead of raw copy
+
+TODO more notes on paper
+
