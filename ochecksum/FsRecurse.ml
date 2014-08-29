@@ -42,11 +42,11 @@ let rec map_dir
       for i = 0 to Array.length dirarr -1 do
         match !success with
           | None -> 
-            let dirent = path ^ dirarr.(i) in
+            let dirent = path ^ dir_sep ^ dirarr.(i) in
             success := map_dir ~file_callback ~dir_callback ~ignore ~path:dirent ~sort
           | _ -> () done
     with
-     error -> success := Some "error "
+     error -> success := Some "error in FsRecurse._map_dir"
     in !success 
   in
   if file_exists path then begin
@@ -68,7 +68,7 @@ let fsrecurse
   ()
   : string option
   =
-  let path = (strip_from_end path dir_sep) ^ dir_sep in
+  let path = (strip_from_end path dir_sep) in
   map_dir ~path ~sort
     ~ignore:("."::".."::ignore)
     ~dir_callback ~file_callback
