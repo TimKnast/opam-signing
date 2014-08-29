@@ -28,16 +28,11 @@ let sha256sum ~path : checksum_t option =
     Some (strip_sha256_whitespace hexbuf : string :> checksum_t)
 (* in Core_string.filter (function '\n'|' '->false|true) -- im too stupid to manage installation of Core *)
 
-let () =
+let ochecksum ~(path:string) : string option=
 (* Sys.set_signal Sys.sigusr1 print_progress *)
-
-  match checksumrecurse
+  checksumrecurse
    ~sort:true
    ~checksum_callback:sha256sum
-   ~path:argv.(1)
-    () with
-  | None ->
-    print_endline "success"
-  | Some a ->
-    print_endline ("failure: " ^ a)
+   ~path
+   ()
 

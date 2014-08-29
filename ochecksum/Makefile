@@ -1,20 +1,30 @@
-ochecksum: fsrecurse checksumrecurse ochecksum.ml
+fsi=FsRecurse.mli FsRecurse.ml
+csi=ChecksumRecurse.mli ChecksumRecurse.ml
+ocl=ochecksum_lib.mli ochecksum_lib.ml
+
+ochecksum: fsrecurse checksumrecurse ochecksumlib
 	ocamlfind ocamlopt -o \
 ochecksum.native \
 -linkpkg -package \
-nocrypto,cstruct,cstruct.unix \
-FsRecurse.mli FsRecurse.ml ChecksumRecurse.mli ChecksumRecurse.ml \
-ochecksum.ml
+cstruct.unix,nocrypto,cmdliner \
+$(fsi) $(csi) $(ocl) ochecksum_cli.ml
 
-checksumrecurse: fsrecurse ChecksumRecurse.ml ChecksumRecurse.mli
+ochecksumlib: fsrecurse checksumrecurse ochecksum_lib.ml
 	ocamlfind ocamlopt -c \
-FsRecurse.ml FsRecurse.mli ChecksumRecurse.mli ChecksumRecurse.ml 
+-linkpkg -package \
+nocrypto,cstruct,cstruct.unix \
+$(fsi) $(csi) \
+ochecksum_lib.ml
 
-fsrecurse: FsRecurse.mli FsRecurse.ml
+checksumrecurse: fsrecurse $(csi)
+	ocamlfind ocamlopt -c \
+$(fsi) $(csi)
+
+fsrecurse: $(fsi)
 	ocamlfind ocamlopt -c \
 -linkpkg -package \
 cstruct.unix,cstruct \
-FsRecurse.mli
+$(fsi)
 
 clean:
 	rm *.cmxa *.cmi *.cmx *.cmo *.native *.o 2>/dev/null | true

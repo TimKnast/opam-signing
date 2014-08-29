@@ -3,6 +3,7 @@ open Buffer
 open Int64
 open Unix.LargeFile
 
+type sorted_t = Sorted | Unsortd
 type signature_t = Valid | Invalid
 type filepath_t = string
 type checksum_t = string
