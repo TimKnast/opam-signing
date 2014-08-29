@@ -14,7 +14,7 @@ ochecksumlib: fsrecurse checksumrecurse ochecksum_lib.ml
 -linkpkg -package \
 nocrypto,cstruct,cstruct.unix \
 $(fsi) $(csi) \
-ochecksum_lib.ml
+$(ocl)
 
 checksumrecurse: fsrecurse $(csi)
 	ocamlfind ocamlopt -c \
